@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "224576759441",
+    "project_id": "zuno-69127",
+    "storage_bucket": "zuno-69127.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:224576759441:android:736d40905063edef3dc130",
+        "android_client_info": {
+          "package_name": "com.example.hello_world"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGg7-4QYrRxFS_mEyCMOhtlNEXXP3Fkpg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
