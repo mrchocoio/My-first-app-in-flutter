@@ -8,6 +8,7 @@ import '../constants/colors.dart';
 import 'SelectionLogin_SignUp.dart';
 
 class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
@@ -70,7 +71,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           password: _passwordController.text.trim(),
         );
 
-        // saving extra info
+        //saving extra info with role field
         await FirebaseFirestore.instance
             .collection('users')
             .doc(userCredential.user!.uid)
@@ -80,6 +81,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           'email': _emailController.text.trim(),
           'phone': _phoneController.text.trim(),
           'address': _addressController.text.trim(),
+          'role': 'user', //default role: user
+          'createdAt': DateTime.now(),
         });
 
         _showSnackBar('User Registered Successfully');
@@ -103,7 +106,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [
             Color(0xFF00897B),
@@ -116,7 +119,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             children: [
               SizedBox(height: screenHeight * 0.15),
@@ -124,7 +127,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: Container(
                   height: 200,
                   width: 200,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.transparent,
                     shape: BoxShape.circle,
                   ),
@@ -138,13 +141,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    //first and last name in one row
                     Row(
                       children: [
                         Expanded(
                           child: buildTextField(_firstNameController, 'First Name'),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: buildTextField(_lastNameController, 'Last Name'),
                         ),
@@ -162,7 +164,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     buildTextField(_addressController, 'Address'),
 
-                    //pwd
                     buildTextField(
                       _passwordController,
                       'Password',
@@ -181,7 +182,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       validator: _validatePassword,
                     ),
 
-                    //confirm pwd
                     buildTextField(
                       _confirmPasswordController,
                       'Confirm Password',
@@ -208,21 +208,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       },
                     ),
 
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
-                    // Terms checkbox
                     CheckboxListTile(
                       title: Row(
                         children: [
-                          Text("I agree to the "),
+                          const Text("I agree to the "),
                           GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => TermsPrivacy()),
+                                MaterialPageRoute(builder: (context) => const TermsPrivacy()),
                               );
                             },
-                            child: Text(
+                            child: const Text(
                               "Terms & Conditions",
                               style: TextStyle(
                                 color: Colors.deepOrange,
@@ -240,18 +239,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       },
                       controlAffinity: ListTileControlAffinity.leading,
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     ElevatedButton(
                       onPressed: _submitForm,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.deepOrange,
-                        minimumSize: Size(200, 50),
+                        minimumSize: const Size(200, 50),
                       ),
                       child: Text(
                         'Sign Up',
                         style: GoogleFonts.lato(
-                          textStyle: TextStyle(
+                          textStyle: const TextStyle(
                             fontSize: 20,
                             color: AppColors.textBlack,
                           ),
@@ -268,7 +267,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  /// Reusable text field builder
+  // reusable text field builder
   Widget buildTextField(
       TextEditingController controller,
       String label, {
@@ -285,7 +284,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         keyboardType: keyboardType,
         decoration: InputDecoration(
           labelText: label,
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
           suffixIcon: suffixIcon,
         ),
         validator: validator ??

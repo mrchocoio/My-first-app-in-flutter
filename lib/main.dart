@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Daraz 2.0',
+      title: 'Zuno',
       theme: ThemeData(
         primaryColor: AppColors.primaryPurple,
         scaffoldBackgroundColor: AppColors.background,

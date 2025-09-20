@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../constants/colors.dart';
 import 'dashboard.dart';
 import 'signUPscreen.dart';
+import 'admin_screen.dart';
 
 class SelectionLogin_SignUp extends StatefulWidget {
   const SelectionLogin_SignUp({super.key});
@@ -38,17 +40,38 @@ class _SelectionLogin_SignUpState extends State<SelectionLogin_SignUp> {
         password: passwordController.text.trim(),
       );
 
-      if (!mounted) return; // prevent navigation if widget is disposed
+      final user = userCredential.user;
 
-      // Navigate immediately, don't delay with SnackBar
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => DashboardScreen()),
-            (route) => false,
-      );
+      if (user == null) return;
+
+      //checking roles from firestore
+      final snapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(user.uid)
+          .get();
+
+      final role = snapshot.data()?["role"] ?? "user";
+
+      if (!mounted) return;
+
+      if (role == "admin") {
+        // admin goes to upload screen
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => AdminScreen()),
+              (route) => false,
+        );
+      } else {
+        // normal user goes to dashboard
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => DashboardScreen()),
+              (route) => false,
+        );
+      }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Welcome ${userCredential.user?.email}!")),
+        SnackBar(content: Text("Welcome ${user.email}! Role: $role")),
       );
 
     } on FirebaseAuthException catch (e) {
@@ -67,8 +90,6 @@ class _SelectionLogin_SignUpState extends State<SelectionLogin_SignUp> {
       if (mounted) setState(() => loading = false);
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +135,7 @@ class _SelectionLogin_SignUpState extends State<SelectionLogin_SignUp> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      // Email Field
+                      //email field
                       TextFormField(
                         controller: emailController,
                         style: TextStyle(color: Colors.black),
@@ -143,7 +164,7 @@ class _SelectionLogin_SignUpState extends State<SelectionLogin_SignUp> {
                       ),
                       SizedBox(height: 20),
 
-                      // Password Field
+                      //password
                       TextFormField(
                         controller: passwordController,
                         obscureText: obscurePassword,
@@ -184,7 +205,7 @@ class _SelectionLogin_SignUpState extends State<SelectionLogin_SignUp> {
                       ),
                       SizedBox(height: 20),
 
-                      // Login Button
+                      //login button
                       ElevatedButton(
                         onPressed: _login,
                         style: ElevatedButton.styleFrom(
@@ -206,7 +227,7 @@ class _SelectionLogin_SignUpState extends State<SelectionLogin_SignUp> {
                       ),
                       SizedBox(height: 10),
 
-                      // Sign Up Redirect
+                      //redirects to signup screen
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
